@@ -40,6 +40,10 @@
 (defun member? (a lat)
   (cond
     ((null lat) nil)
-    (t (or (eq (car lat) a) (member? a (cdr lat))))
+    (t(or
+        (eq (car lat) a)
+        (member? a (cdr lat))
+      )
+    )
   )
 )
