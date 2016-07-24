@@ -176,3 +176,75 @@
     )
   )
 )
+
+;; multirember-f
+(defun multirember-f (test?)
+  (function
+    (lambda (a lat)
+      (cond
+        ((null lat) '())
+        ((funcall test? a (car lat))
+          (funcall (multirember-f test?) a (cdr lat)))
+        (t
+          (cons (car lat) (funcall (multirember-f test?) a (cdr lat))))
+      )
+    )
+  )
+)
+
+;; multirember-eq
+(setq multirember-eq (multirember-f 'eq))
+
+;; eq-tuna
+(setq eq-tuna (eq?-c 'tuna))
+
+;; multiremberT
+(defun multiremberT (test? lat)
+  (cond
+    ((null lat) '())
+    ((funcall test? (car lat))
+      (multiremberT test? (cdr lat)))
+    (t
+      (cons (car lat) (multiremberT test? (cdr lat))))
+  )
+)
+
+;; a-friend
+(defun a-friend (x y)
+  (null y)
+)
+
+;; new-friend
+(defun new-friend (newlat seen)
+  (a-friend newlat (cons 'tuna seen))
+)
+
+;; last-friend
+(defun last-friend (x y)
+  (length x)
+)
+
+;; multiremberCo
+(defun multiremberCo (a lat col)
+  (cond
+    ((null lat)
+      (funcall col '() '()))
+    ((eq a (car lat))
+      (multiremberCo a (cdr lat) (lambda (newlat seen) (funcall col newlat (cons (car lat) seen)))))
+    (t
+      (multiremberCo a (cdr lat) (lambda (newlat seen) (funcall col (cons (car lat) newlat) seen))))
+  )
+)
+
+;; multiinsertLR
+(defun multiinsertLR (new oldL oldR lat)
+  (cond
+    ((null lat) '())
+    ((eq oldL (car lat))
+      (cons new (cons oldL (multiinsertLR new oldL oldR (cdr lat)))))
+    ((eq oldR (car lat))
+      (cons oldR (cons new (multiinsertLR new oldL oldR (cdr lat)))))
+    (t
+      (cons (car lat) (multiinsertLR new oldL oldR (cdr lat))))
+  )
+)
