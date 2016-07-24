@@ -78,3 +78,99 @@
 
 ;; eq?-salad
 (setq eq?-salad (eq?-c 'salad))
+
+;; insertL-f
+;; inserts elem to the left by a passed function
+(defun insertL-f (test?)
+  (function
+    (lambda (new old l)
+      (cond
+        ((null l) '())
+        ((funcall test? old (car l))
+          (cons new (cons old (cdr l))))
+        (t
+          (cons (car l) (funcall (insertL-f test?) new old (cdr l))))
+      )
+    )
+  )
+)
+
+;; insertR-f
+;; inserts elem to the right by a passed function
+(defun insertR-f (test?)
+  (function
+    (lambda (new old l)
+      (cond
+        ((null l) '())
+        ((funcall test? old (car l))
+          (cons old (cons new (cdr l))))
+        (t
+          (cons (car l) (funcall (insertR-f test?) new old (cdr l))))
+      )
+    )
+  )
+)
+
+;; seqL
+(defun seqL (new old l)
+  (cons new (cons old l))
+)
+
+;; seqR
+(defun seqR (new old l)
+  (cons old (cons new l))
+)
+
+;; insert-g
+(defun insert-g (seq)
+  (function
+    (lambda (new old l)
+      (cond
+        ((null l) '())
+        ((eq old (car l))
+          (funcall seq new old (cdr l)))
+        (t
+          (cons (car l) (funcall (insert-g seq) new old (cdr l))))
+      )
+    )
+  )
+)
+
+;; seqS
+(defun seqS (new old l)
+  (cons new l)
+)
+
+;; subst
+(setq subst (insert-g 'seqS))
+
+;; seqrem
+(defun seqrem (new old l)
+  l
+)
+
+;; yyy
+(defun yyy (a l)
+  (funcall (insert-g 'seqrem) nil a l)
+)
+
+;; atom-to-function
+(defun atom-to-function (x)
+  (cond
+    ((eq x '+) (function +))
+    ((eq x '*) (function *))
+  )
+)
+
+;; value
+(defun value (nexp)
+  (cond
+    ((atom? nexp) nexp)
+    (t
+      (funcall (atom-to-function (car (cdr nexp)))
+        (value (car nexp))
+        (value (car (cdr (cdr nexp))))
+      )
+    )
+  )
+)
