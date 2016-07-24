@@ -1,3 +1,5 @@
+;; Chapter 7
+
 ;; member?
 ;; checks if an atom is a member of lat
 (defun member? (a lat)

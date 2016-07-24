@@ -1,3 +1,5 @@
+;; Chapter 8
+
 ;; atom?
 ;; checks if element is atom
 (defun atom? (x)

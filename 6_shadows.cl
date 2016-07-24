@@ -1,3 +1,5 @@
+;; Chapter 6
+
 ;; number
 ;; checks if element is number
 
