@@ -248,3 +248,75 @@
       (cons (car lat) (multiinsertLR new oldL oldR (cdr lat))))
   )
 )
+
+;; multiinsertLRCo
+(defun multiinsertLRCo (new oldL oldR lat col)
+  (cond
+    ((null lat)
+      (funcall col '() 0 0))
+    ((eq oldL (car lat))
+      (multiinsertLRCo new oldL oldR (cdr lat) (lambda (newlat L R)(
+        funcall col (cons new (cons oldL newlat)) (+ 1 L) R
+      ))))
+    ((eq oldR (car lat))
+      (multiinsertLRCo new oldL oldR (cdr lat) (lambda (newlat L R)(
+        funcall col (cons oldR (cons new newlat)) L (+ 1 R)
+      ))))
+    (t
+      (multiinsertLRCo new oldL oldR (cdr lat) (lambda (newlat L R)(
+        funcall col (cons (car lat) newlat) L R
+      ))))
+  )
+)
+
+;; even?
+(defun even? (n)
+  (= (mod n 2) 0)
+)
+
+;; evens-only*
+(defun evens-only* (l)
+  (cond
+      ((null l) '())
+      ((atom? (car l))
+        (cond
+          ((even? (car l))
+            (cons (car l) (evens-only* (cdr l))))
+          (t
+            (evens-only* (cdr l)))
+        ))
+      (t
+        (cons (evens-only* (car l)) (evens-only* (cdr l))))
+  )
+)
+
+;; evens-only*Co
+(defun evens-only*Co (l col)
+  (cond
+    ((null l)
+      (funcall col '() 1 0))
+    ((atom? (car l))
+      (cond
+        ((even? (car l))
+          (evens-only*Co (cdr l) (lambda (newl p s)(
+            funcall col (cons (car l) newl) (* (car l) p) s)
+          )))
+        (t
+          (evens-only*Co (cdr l) (lambda (newl p s)(
+            funcall col newl p (+ (car l) s)
+          ))))
+      )
+    )
+    (t
+      (evens-only*Co (car l) (lambda (al ap as)(
+          evens-only*Co (cdr l) (lambda (dl dp ds)(
+            funcall col (cons al dl) (* ap dp) (+ as ds)
+          ))
+      ))))
+  )
+)
+
+;; the-last-friend
+(defun the-last-friend (newl prod sum)
+  (list sum prod newl)
+)
