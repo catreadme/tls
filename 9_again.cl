@@ -96,3 +96,164 @@
       (A (- 1 n) (A n (- 1 m))))
   )
 )
+
+;; add1
+;; ads 1 to a number
+(defun add1 (x)
+  (+ x 1)
+)
+
+;; l0
+(lambda (l)
+  (cond
+    ((null l) 0)
+    (t
+      (add1 (eternity (cdr l))))
+  )
+)
+
+;; l<=1
+(lambda (l)
+  (cond
+    ((null l) 0)
+    (t (add1 ((lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (eternity (cdr l))))
+      )
+    ) (cdr l))))
+  )
+)
+
+;; l<=2
+(lambda (l)
+  (cond
+    ((null l) 0)
+    (t (add1 ((lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 ((lambda (l)
+            (cond
+              ((null l) 0)
+              (t
+                (add1 (eternity (cdr l))))
+            )
+          ) (cdr l))))
+      )
+    ) (cdr l))))
+  )
+)
+
+;; length0
+((lambda (length)
+  (lambda (l)
+    (cond
+      ((null l) 0)
+      (t
+        (add1 (funcall length (cdr l))))
+    )
+  )
+) 'eternity)
+
+;; length<=1
+((lambda (f)
+  (lambda (l)
+    (cond
+      ((null l) 0)
+      (t
+        (add1 (funcall f (cdr l))))
+    )
+  )
+) ((lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+) 'eternity))
+
+;; length<=2
+((lambda (length)
+  (lambda (l)
+    (cond
+      ((null l) 0)
+      (t
+        (add1 (funcall length (cdr l))))
+    )
+  )
+) ((lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+) ((lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+) 'eternity)))
+
+;; mk-length0
+((lambda (mk-length)
+  (funcall mk-length 'eternity)
+) (lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+))
+
+;; mk-length<=1
+((lambda (mk-length)
+  (funcall mk-length
+    (funcall mk-length 'eternity))
+) (lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+))
+
+;; mk-length<=2
+((lambda (mk-length)
+  (funcall mk-length
+    (funcall mk-length
+      (funcall mk-length 'eternity)))
+) (lambda (length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall length (cdr l))))
+      )
+    )
+))
+
+;; mk-length-again
+(funcall ((lambda (mk-length)
+  (funcall mk-length mk-length)
+) (lambda (mk-length)
+    (lambda (l)
+      (cond
+        ((null l) 0)
+        (t
+          (add1 (funcall (funcall mk-length mk-length) (cdr l))))
+      )
+    )
+)) '(5 2 1 5))
