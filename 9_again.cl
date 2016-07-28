@@ -1,3 +1,5 @@
+;; Chapter 9
+
 ;; pick
 (defun pick (n lat)
   (cond
@@ -257,3 +259,13 @@
       )
     )
 )) '(5 2 1 5))
+
+;; Y
+(defun Y (f)
+  ((lambda (x) (funcall x x))
+     (lambda (y)
+       (funcall f (lambda (&rest args)
+  		  (apply (funcall y y) args)))
+     )
+  )
+)
